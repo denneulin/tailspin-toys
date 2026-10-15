@@ -35,3 +35,6 @@ pnpm-debug.log*
 # editors
 .idea/
 *.swp
+
+# worktrees created by `claude -w`
+.claude/worktrees/
