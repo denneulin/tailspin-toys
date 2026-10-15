@@ -4,9 +4,9 @@ import eslintPluginAstro from "eslint-plugin-astro";
 import globals from "globals";
 
 export default [
-  // Global ignores
+  // Global ignores (.claude/worktrees/ holds the worktrees of claude -w: each lints its own code)
   {
-    ignores: ["dist/", "node_modules/", ".astro/", "db/migrations/"],
+    ignores: ["dist/", "node_modules/", ".astro/", "db/migrations/", ".claude/worktrees/"],
   },
 
   // Base JavaScript/TypeScript recommended rules
