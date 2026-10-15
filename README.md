@@ -1,106 +1,79 @@
 # Tailspin Toys
 
-Tailspin Toys is a crowdfunding platform for games with a developer theme. The project is a website for a fictional game crowd-funding company, built as a single [Astro](https://astro.build/) site (fully prerendered/static output) styled with [Tailwind CSS](https://tailwindcss.com/). Its data lives in a local SQLite database accessed through [Drizzle ORM](https://orm.drizzle.team/) and Node.js's built-in SQLite driver; pages query the database directly in frontmatter at build time, so there is no separate backend service.
+Le projet d'entraînement de la formation Claude Code « Context Engineering, skills & workflows ». C'est un fork de [github-samples/tailspin-toys](https://github.com/github-samples/tailspin-toys), l'appli que GitHub utilise pour ses ateliers d'agents, adapté à Claude Code (voir [ce qui change](#ce-qui-change-par-rapport-à-loriginal)).
 
-## Architecture
+Tailspin Toys est un site fictif de financement participatif de jeux : un catalogue de 21 jeux, une fiche par jeu et une page À propos. Il est écrit en TypeScript, avec [Astro](https://astro.build/) 7 et [Tailwind CSS](https://tailwindcss.com/) v4. Les données sont dans une base SQLite locale, lue avec [Drizzle ORM](https://orm.drizzle.team/) et le module SQLite intégré à Node. Il n'y a rien d'autre à installer que Node : ni serveur de base de données, ni Docker, ni clé d'API.
 
-- **Astro 7** — pages, layouts, components, and routing. `output: 'static'`, so the whole site is prerendered to HTML at build time.
-- **Drizzle ORM + Node SQLite** — the data layer. The schema lives in `db/schema.ts`; data is seeded from `db/games.csv`. Migrations are managed with `drizzle-kit`.
-- **Tailwind CSS v4** — styling via utility classes (dark theme).
-- **Vitest** — unit tests for the data layer and pure transforms.
-- **Playwright** — end-to-end tests run against the built static site.
+## Prérequis
 
-Development commands are defined in `package.json`: npm runs Astro for the dev server, static build, and preview. The `predev` and `prebuild` npm hooks run the TypeScript database migration and seed tasks in `db/`, writing to the gitignored `tailspin.db` file.
+- **Git**.
+- **Node.js 24 LTS** ; Node 22 convient aussi, à partir de 22.13. Évitez les versions impaires (23, 25), que Vitest ne prend pas en charge. Vérifiez avec `node --version`.
+- **Claude Code**.
 
-## Using this template
+Sous Windows, si PowerShell refuse de lancer `npm` (« l'exécution de scripts est désactivée sur ce système »), tapez une fois `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, ou passez par Git Bash.
 
-This repository is a GitHub template. When you create a new repository from it, a one-time **Bootstrap template issues** workflow (`.github/workflows/bootstrap-issues.yml`) runs automatically on the first push to `main` and opens a set of starter issues describing suggested first features. Each issue is defined by a Markdown file in `.github/bootstrap-issues/` — the first heading becomes the issue title and the remaining content becomes the body — so you can edit, add, or remove files there to control which issues are created.
-
-The workflow only runs on repositories created from the template (the `if: ${{ !github.event.repository.is_template }}` guard skips the template itself), and after creating the issues it removes itself and the `.github/bootstrap-issues/` folder in a cleanup commit so it never runs again.
-
-## Getting started
-
-Install dependencies once with Node.js 22.13 or later:
+## Installation
 
 ```bash
+git clone https://github.com/denneulin/tailspin-toys.git
+cd tailspin-toys
 npm ci
-npx playwright install chromium   # only needed to run the E2E tests
+npm run test:e2e:install   # le navigateur des tests e2e : 100 à 120 Mo à télécharger
 ```
 
-## Launch the site
+Sous Linux, si Playwright signale des bibliothèques manquantes : `npx playwright install-deps chromium` (il demande le mot de passe pour `sudo`).
+
+## Lancer le site
 
 ```bash
 npm run dev
 ```
 
-`predev` migrates and seeds the local database first. Then navigate to the [website](http://localhost:4321) to see the site!
+Ouvrez l'URL affichée, http://localhost:4321 en général. `npm run dev` crée d'abord la base, `tailspin.db`, à partir de `db/games.csv`. Dans un deuxième worktree, le serveur prend le port libre suivant (4322, 4323…).
 
-To preview a production build instead:
+Quand c'est Claude Code qui lance `npm run dev` sous macOS ou Linux, Astro 7 passe le serveur en arrière-plan et rend la main à Claude. Pour l'arrêter : `npx astro dev stop`.
 
-```bash
-npm run build      # prebuild migrates + seeds, then builds the static site
-npm run preview
-```
-
-## Database
-
-The SQLite database is built from `db/games.csv` — there is no live data to migrate.
+## Tester
 
 ```bash
-npm run db:generate   # generate a migration after editing db/schema.ts
-npm run db:migrate    # apply migrations
-npm run db:seed       # seed from games.csv (idempotent)
-npm run db:setup      # migrate + seed (run automatically by predev/prebuild)
-npm run db:export     # write the seeded catalog to db/catalog.json
+npm run test:unit       # Vitest : 39 tests, en moins d'une seconde
+npm run test:e2e        # Playwright : construit le site, le sert sur un port propre au dossier, puis 24 tests
+npm run lint            # ESLint
+npm run typecheck:all   # TypeScript 7 (tsgo) et astro check
 ```
 
-> [!NOTE]
-> Seeding is idempotent — it skips games that already exist (matched by title) rather than reconciling changed rows. CI always starts from a clean database, so it reflects `games.csv` exactly. Locally, if you edit or remove rows in `games.csv`, delete `tailspin.db` and re-run `npm run db:setup` to fully regenerate.
+## Le backlog
 
-## Running tests
+Neuf tickets, rédigés par l'équipe de GitHub, attendent dans [`backlog/`](backlog/). Chacun a un besoin, puis des critères d'acceptation à cocher : accessibilité, `data-testid`, tests unitaires et tests e2e. Aucun n'est encore codé.
 
-```bash
-npm run test:unit   # Vitest unit tests (transforms + data-access helpers)
-npm run test:e2e    # Playwright E2E tests (builds + previews the static site first)
-```
+| Ticket | En bref |
+|---|---|
+| [01](backlog/01-search-games.md) | Rechercher un jeu par son titre |
+| [02](backlog/02-sort-games.md) | Trier la liste par titre (A–Z, Z–A) ou par note |
+| [03](backlog/03-detail-descriptions.md) | Afficher sur la fiche d'un jeu la description de sa catégorie et de son éditeur |
+| [04](backlog/04-publisher-pages.md) | Une page par éditeur, avec ses jeux |
+| [05](backlog/05-catalog-summary.md) | Un résumé du catalogue sur l'accueil : nombre de jeux, note moyenne |
+| [06](backlog/06-pagination.md) | Paginer la liste des jeux |
+| [07](backlog/07-filter-games.md) | Filtrer par catégorie et par éditeur, les deux filtres combinés |
+| [08](backlog/08-coding-standards.md) | Des standards de code : commentaires, TSDoc, règles ESLint (rien de visible à l'écran) |
+| [09](backlog/09-backer-concierge.md) | « Backer Concierge », un assistant IA qui répond sur le catalogue (il faut une clé d'API) |
 
-## Linting
+Vous pouvez aussi partir de votre propre idée : une liste de souhaits, des avis, le bouton « Support This Game », qui ne fait encore rien… Une fonctionnalité qui enregistre quelque chose passe par une route servie à la demande ; le modèle est `src/pages/api/games/[id].ts`.
 
-The frontend uses ESLint to enforce code quality across TypeScript and Astro files. Run it with:
+## Le harness Claude Code
 
-```bash
-npm run lint
-```
+- `CLAUDE.md` : les commandes, quand une tâche est finie, et les pièges du projet.
+- `.claude/rules/` : quatre règles, chargées selon les fichiers que Claude lit (données, interface, tests unitaires, tests e2e).
+- `.claude/settings.json` : les tests, le lint et la vérification des types tournent sans demande de permission.
 
-ESLint is also run automatically in CI on pull requests to `main`.
+## Ce qui change par rapport à l'original
 
-## Type checking
+- Le contexte Copilot (`.github/copilot-instructions.md`, fichiers d'instructions, skills, workflows agentiques) est remplacé par le harness Claude Code ci-dessus.
+- L'adaptateur Node d'Astro est installé : les pages restent prérendues, et une route qui exporte `prerender = false` répond à la demande. Une route d'exemple, `GET /api/games/:id`, est testée dans `e2e-tests/api.spec.ts`.
+- Les tests e2e marchent quand Claude Code les lance, et chaque worktree teste son propre serveur.
+- Windows : des fins de ligne LF partout, et des serveurs qui n'écoutent que sur la machine (pas d'alerte du pare-feu).
+- Les tickets, qui devenaient des issues GitHub dans un dépôt créé depuis le modèle, sont des fichiers de `backlog/`.
 
-The project runs on **TypeScript 7** (the native Go compiler, `tsgo`) for type checking, adopted side-by-side via the [`@typescript/native-preview`](https://www.npmjs.com/package/@typescript/native-preview) package. The classic `typescript` package is intentionally kept at v6 so ESLint + `typescript-eslint` and `astro check` keep working unchanged — TypeScript 7's programmatic API isn't ready for those tools yet.
+## Licence
 
-```bash
-npm run typecheck        # tsgo (TS 7) type-checks the pure TypeScript (db/, src/lib/, src/types/, configs, tests)
-npm run typecheck:astro  # astro sync + astro check type-check .astro files (on the classic TypeScript package)
-npm run typecheck:all    # both of the above
-```
-
-`tsgo` runs against [`tsconfig.tsgo.json`](tsconfig.tsgo.json), a scoped config that excludes `.astro` files (which the native compiler doesn't understand). Type checking runs automatically in CI on pull requests to `main`.
-
-> [!NOTE]
-> The native compiler is used only for type checking (`--noEmit`); the site is still built by `astro build` (Vite/esbuild). The classic `typescript` package stays on v6 until `typescript-eslint` and `@astrojs/check` support the native API (~TS 7.1); a Dependabot `ignore` in `.github/dependabot.yml` holds the classic `typescript@7` bump until then.
-
-## License 
-
-This project is licensed under the terms of the MIT open source license. Please refer to the [LICENSE](./LICENSE) for the full terms.
-
-## Maintainers 
-
-You can find the list of maintainers in [CODEOWNERS](./.github/CODEOWNERS).
-
-## Support
-
-This project is provided as-is, and may be updated over time. If you have questions, please open an issue.
-
-## Disclaimer
-
-This app is not intended for use in a production environment, nor is it built as an example of what a production app should look like.
+MIT, comme l'original : voir [LICENSE](LICENSE). Tailspin Toys est un projet de GitHub, [github-samples/tailspin-toys](https://github.com/github-samples/tailspin-toys). Ce site n'est pas fait pour la production.
