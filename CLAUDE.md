@@ -23,3 +23,17 @@ Les échanges, les specs, les tickets, le glossaire et les ADR sont en français
 - `tailspin.db`, ignorée par git, est construite à partir de `db/games.csv` par `npm run db:setup`, que lancent `npm run dev` et `npm run build`. Le seed n'ajoute que les jeux absents : après un changement du CSV ou du seed, supprime `tailspin.db`.
 - Les migrations de `db/migrations/` sont produites par `npm run db:generate` après un changement de `db/schema.ts`, et committées avec lui ; ne les écris jamais à la main.
 - Le paquet `typescript` reste en v6 : ESLint et `astro check` ne supportent pas encore la v7. TypeScript 7 (`tsgo`) ne sert qu'à la vérification de types.
+
+## Agent skills
+
+### Gestionnaire de tickets
+
+Tickets et specs en fichiers Markdown locaux, sous `.scratch/<fonctionnalité>/`. Voir `docs/agents/issue-tracker.md`.
+
+### Labels de tri
+
+Les cinq labels par défaut (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`), en ligne `Status:` dans chaque ticket. Voir `docs/agents/triage-labels.md`.
+
+### Docs de domaine
+
+Contexte unique : `GLOSSARY.md` et `docs/adr/` à la racine. Voir `docs/agents/domain.md`.
