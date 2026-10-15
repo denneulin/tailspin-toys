@@ -8,4 +8,4 @@ Different players browse in different ways — some want the highest-rated title
 - [ ] Users can sort the game list by star rating (highest first)
 - [ ] Games without a star rating are ordered in a sensible, documented way when sorting by rating
 - [ ] The sort control follows the project's accessibility guidelines (labeling, keyboard navigation, visible focus states) and includes a `data-testid` attribute
-- [ ] Unit tests cover the sorting helper(s) and Playwright e2e tests cover the sorting behavior
+- [ ] Unit tests cover the sorting helper(s)

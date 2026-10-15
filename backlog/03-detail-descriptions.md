@@ -8,4 +8,4 @@ The categories and publishers tables already include a `description` field, but 
 - [ ] The game detail page displays the publisher description when one is available
 - [ ] Missing descriptions are handled gracefully (the section is hidden rather than showing empty content)
 - [ ] The new content follows the project's styling and accessibility guidelines and includes `data-testid` attributes
-- [ ] The data-access helper is updated to include the description fields, with unit tests covering the change, and Playwright e2e tests verify the descriptions render
+- [ ] The data-access helper is updated to include the description fields, with unit tests covering the change

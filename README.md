@@ -18,10 +18,7 @@ Sous Windows, si PowerShell refuse de lancer `npm` (« l'exécution de scripts e
 git clone https://github.com/denneulin/tailspin-toys.git
 cd tailspin-toys
 npm ci
-npm run test:e2e:install   # le navigateur des tests e2e : 100 à 120 Mo à télécharger
 ```
-
-Sous Linux, si Playwright signale des bibliothèques manquantes : `npx playwright install-deps chromium` (il demande le mot de passe pour `sudo`).
 
 ## Lancer le site
 
@@ -37,14 +34,15 @@ Quand c'est Claude Code qui lance `npm run dev` sous macOS ou Linux, Astro 7 pas
 
 ```bash
 npm run test:unit       # Vitest : 39 tests, en moins d'une seconde
-npm run test:e2e        # Playwright : construit le site, le sert sur un port propre au dossier, puis 24 tests
 npm run lint            # ESLint
-npm run typecheck:all   # TypeScript 7 (tsgo) et astro check
+npm run typecheck       # TypeScript 7 (tsgo) sur db/ et src/lib/
 ```
+
+Les tests e2e (Playwright, `npm run test:e2e`) ne servent pas pendant la formation : ils demandent un navigateur de test, que les postes n'installent pas.
 
 ## Le backlog
 
-Neuf tickets, rédigés par l'équipe de GitHub, attendent dans [`backlog/`](backlog/). Chacun a un besoin, puis des critères d'acceptation à cocher : accessibilité, `data-testid`, tests unitaires et tests e2e. Aucun n'est encore codé.
+Neuf tickets, rédigés par l'équipe de GitHub, attendent dans [`backlog/`](backlog/). Chacun a un besoin, puis des critères d'acceptation à cocher : accessibilité, `data-testid` et tests unitaires. Aucun n'est encore codé.
 
 | Ticket | En bref |
 |---|---|
@@ -62,9 +60,9 @@ Vous pouvez aussi partir de votre propre idée : une liste de souhaits, des avis
 
 ## Le harness Claude Code
 
-- `CLAUDE.md` : les commandes, quand une tâche est finie, et les pièges du projet.
+- `CLAUDE.md` : les commandes, quand une tâche est finie, la langue des échanges et du code, et les pièges du projet.
 - `.claude/rules/` : quatre règles, chargées selon les fichiers que Claude lit (données, interface, tests unitaires, tests e2e).
-- `.claude/settings.json` : les tests, le lint et la vérification des types tournent sans demande de permission.
+- `.claude/settings.json` : les tests unitaires, le lint, la vérification des types et le serveur de dev tournent sans demande de permission, et les worktrees de `claude -w` partent du commit courant (`"worktree": { "baseRef": "head" }`).
 
 ## Ce qui change par rapport à l'original
 

@@ -8,4 +8,4 @@ The home page jumps straight into the featured games grid without giving visitor
 - [ ] The home page displays the average star rating across games that have a rating
 - [ ] The summary handles edge cases gracefully (no games, or no rated games)
 - [ ] The summary follows the project's styling and accessibility guidelines and includes `data-testid` attributes
-- [ ] A data-access helper computes the summary deterministically, with unit test coverage, and Playwright e2e tests verify it renders on the home page
+- [ ] A data-access helper computes the summary deterministically, with unit test coverage

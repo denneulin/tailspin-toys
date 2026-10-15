@@ -9,4 +9,4 @@ As the game catalog grows, players need a faster way to find titles relevant to 
 - [ ] Category and publisher filters can be combined
 - [ ] The data-access helpers in `src/lib/` support filtering games by category and publisher
 - [ ] Filter controls follow the project's accessibility guidelines (keyboard navigation, ARIA, visible focus states) and include `data-testid` attributes
-- [ ] Vitest unit tests cover the filtering helpers and Playwright e2e tests cover the new filtering behavior
+- [ ] Vitest unit tests cover the filtering helpers

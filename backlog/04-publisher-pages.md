@@ -8,4 +8,4 @@ When a backer likes a game, a natural next step is to see what else the same pub
 - [ ] The page shows the publisher name and description, and reuses the existing game card for the listing
 - [ ] Publisher names on the game card and/or game detail page link to the publisher page
 - [ ] The page follows the project's styling and accessibility guidelines and includes `data-testid` attributes
-- [ ] A data-access helper returns games for a given publisher with unit test coverage, and Playwright e2e tests cover the publisher page
+- [ ] A data-access helper returns games for a given publisher with unit test coverage
