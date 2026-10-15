@@ -1,11 +1,12 @@
 name: "Run tests"
 
-# Run tests on pull requests to main and on pushes to main
+# Run tests on pull requests to main, on pushes to main and to the fallback
+# branches the participants fetch during the training (secours/*).
 on:
   pull_request:
     branches: [main]
   push:
-    branches: [main]
+    branches: [main, "secours/**"]
   workflow_dispatch:
 
 # Cancel superseded in-progress runs for the same ref so rapid pushes don't
@@ -19,9 +20,16 @@ env:
   ASTRO_TELEMETRY_DISABLED: "1"
 
 jobs:
-  # Lint the frontend code with ESLint
-  frontend-lint:
-    runs-on: ubuntu-latest
+  # What a participant's machine runs during the training, on Windows and on
+  # Linux: a clean install, the unit tests, the lint, the types and the build.
+  # No Playwright here: the training machines install no test browser.
+  workstation:
+    name: "Workstation (${{ matrix.os }})"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
 
@@ -32,20 +40,34 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "lts/*"
+          node-version: "24"
           cache: "npm"
           cache-dependency-path: "./package-lock.json"
 
       - name: Install JavaScript dependencies
         run: npm ci
 
-      # Generate Astro's content/types so eslint sees the same types as the editor.
-      - name: Sync Astro types
-        run: npx astro sync
+      - name: Run unit tests
+        run: npm run test:unit
 
-      # Run ESLint to check code quality
       - name: Run ESLint
         run: npm run lint
+
+      - name: Run type-check (tsgo)
+        run: npm run typecheck
+
+      # prebuild runs db:migrate + db:seed, so this also checks the database setup.
+      - name: Build the site
+        run: npm run build
+
+      # A seed that silently did nothing would still build: the home page would
+      # just show no games. Check the prerendered home page lists some.
+      - name: Check the home page lists the games
+        shell: bash
+        run: |
+          count=$(grep -o 'data-testid="game-card"' dist/client/index.html | wc -l)
+          echo "Game cards on the home page: $count"
+          test "$count" -gt 0
 
   # Type-check the codebase: pure TypeScript via the native TS 7 compiler (tsgo,
   # from @typescript/native-preview) and .astro files via astro check (which runs
@@ -62,7 +84,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "lts/*"
+          node-version: "24"
           cache: "npm"
           cache-dependency-path: "./package-lock.json"
 
@@ -72,29 +94,6 @@ jobs:
       # tsgo (TS 7) for .ts + astro sync/check (classic TS) for .astro
       - name: Run type-check
         run: npm run typecheck:all
-
-  # Run the Vitest unit tests (pure transforms + data-access helpers)
-  unit-tests:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "lts/*"
-          cache: "npm"
-          cache-dependency-path: "./package-lock.json"
-
-      - name: Install JavaScript dependencies
-        run: npm ci
-
-      - name: Run unit tests
-        run: npm run test:unit
 
   # Build the static site and run the Playwright end-to-end suite against it
   frontend-tests:
@@ -116,7 +115,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "lts/*"
+          node-version: "24"
           cache: "npm"
           cache-dependency-path: "./package-lock.json"
 
