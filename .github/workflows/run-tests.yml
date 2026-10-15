@@ -60,14 +60,15 @@ jobs:
       - name: Build the site
         run: npm run build
 
-      # A seed that silently did nothing would still build: the home page would
-      # just show no games. Check the prerendered home page lists some.
-      - name: Check the home page lists the games
-        shell: bash
-        run: |
-          count=$(grep -o 'data-testid="game-card"' dist/client/index.html | wc -l)
-          echo "Game cards on the home page: $count"
-          test "$count" -gt 0
+      # A seed that silently did nothing would still build, with an empty
+      # catalog. Count the games in the database the build used; the home page
+      # may be prerendered or rendered on demand, so its HTML can't tell.
+      - name: Check the seed filled the database
+        run: >-
+          node -e "const { DatabaseSync } = require('node:sqlite');
+          const n = new DatabaseSync('tailspin.db').prepare('SELECT count(*) AS n FROM games').get().n;
+          console.log('Games in tailspin.db:', n);
+          if (n === 0) process.exit(1);"
 
   # Type-check the codebase: pure TypeScript via the native TS 7 compiler (tsgo,
   # from @typescript/native-preview) and .astro files via astro check (which runs
