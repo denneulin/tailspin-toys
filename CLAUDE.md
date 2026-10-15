@@ -19,7 +19,7 @@ Les échanges, les specs, les tickets, le glossaire et les ADR sont en français
 
 ## Pièges
 
-- Sous macOS et Linux, Astro 7 détecte que c'est un agent qui lance `npm run dev` ou `npm run preview` : le serveur passe en arrière-plan, et la commande rend la main avec l'URL. Un second `npm run dev` dans le même dossier ne relance rien, il redonne cette URL. `npx astro dev status`, `npx astro dev logs` et `npx astro dev stop` le pilotent (`npx astro preview …` pour la preview).
+- Sous macOS et Linux, Astro 7 détecte que c'est un agent qui lance `npm run dev` ou `npm run preview` : le serveur passe en arrière-plan, et la commande rend la main avec l'URL. Un second `npm run dev` dans le même dossier ne relance rien, il redonne cette URL. `npx astro dev status`, `npx astro dev logs` et `npx astro dev stop` le pilotent (`npx astro preview …` pour la preview). Sous Windows, le serveur reste au premier plan, et la commande ne rend jamais la main : lance-la en tâche de fond (`run_in_background`).
 - `tailspin.db`, ignorée par git, est construite à partir de `db/games.csv` par `npm run db:setup`, que lancent `npm run dev` et `npm run build`. Le seed n'ajoute que les jeux absents : après un changement du CSV ou du seed, supprime `tailspin.db`.
 - Les migrations de `db/migrations/` sont produites par `npm run db:generate` après un changement de `db/schema.ts`, et committées avec lui ; ne les écris jamais à la main.
 - Le paquet `typescript` reste en v6 : ESLint et `astro check` ne supportent pas encore la v7. TypeScript 7 (`tsgo`) ne sert qu'à la vérification de types.
