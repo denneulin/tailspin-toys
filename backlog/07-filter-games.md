@@ -17,4 +17,4 @@ Two developers will share this work, each on their own branch. Plan it as:
 
 1. A first slice that filters by a single category, end to end. It lays down everything the other slices share.
 2. Then, in parallel and independently: filtering by publisher, and selecting several categories at once. Keep each in its own files as far as possible, so the two branches merge without conflict.
-3. Last, combining category and publisher filters.
+3. Last, once both branches are merged: combining category and publisher filters, as a slice of its own, even if it turns out small. It proves that the two filters work together.
