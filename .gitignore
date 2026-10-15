@@ -7,8 +7,8 @@ dist/
 # generated types
 .astro/
 
-# dependencies
-node_modules/
+# dependencies (no trailing slash: a worktree may link node_modules instead of copying it)
+node_modules
 
 # local SQLite database (regenerated from db/games.csv)
 *.db
