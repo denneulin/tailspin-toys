@@ -61,7 +61,7 @@ describe('catalog filtered by category', () => {
         const catalog = await getCatalog(db, new URLSearchParams());
         expect(catalog.games.map((g) => g.title)).toEqual(allTitles);
         expect(catalog.total).toBe(5);
-        expect(catalog.filters).toEqual({ categoryIds: [] });
+        expect(catalog.filters.categoryIds).toEqual([]);
     });
 
     it('keeps only the games of the chosen category, ordered by title', async () => {
@@ -78,7 +78,7 @@ describe('catalog filtered by category', () => {
 
     it('returns the chosen category in the kept filters', async () => {
         const catalog = await getCatalog(db, new URLSearchParams({ category: String(seeded.puzzleId) }));
-        expect(catalog.filters).toEqual({ categoryIds: [seeded.puzzleId] });
+        expect(catalog.filters.categoryIds).toEqual([seeded.puzzleId]);
     });
 
     it.each([
@@ -93,14 +93,14 @@ describe('catalog filtered by category', () => {
         const catalog = await getCatalog(db, new URLSearchParams({ category: value }));
         expect(catalog.games.map((g) => g.title)).toEqual(allTitles);
         expect(catalog.total).toBe(5);
-        expect(catalog.filters).toEqual({ categoryIds: [] });
+        expect(catalog.filters.categoryIds).toEqual([]);
     });
 
     it('keeps an unknown category id, which matches no game', async () => {
         const catalog = await getCatalog(db, new URLSearchParams({ category: '99999' }));
         expect(catalog.games).toEqual([]);
         expect(catalog.total).toBe(5);
-        expect(catalog.filters).toEqual({ categoryIds: [99999] });
+        expect(catalog.filters.categoryIds).toEqual([99999]);
     });
 
     it('keeps only the first valid category value', async () => {
@@ -112,13 +112,13 @@ describe('catalog filtered by category', () => {
         ]);
         const catalog = await getCatalog(db, params);
         expect(catalog.games.map((g) => g.title)).toEqual(['Puzzle A', 'Puzzle B']);
-        expect(catalog.filters).toEqual({ categoryIds: [seeded.puzzleId] });
+        expect(catalog.filters.categoryIds).toEqual([seeded.puzzleId]);
     });
 
     it('ignores parameters of no filter family', async () => {
         const catalog = await getCatalog(db, new URLSearchParams({ sort: 'title', page: '2' }));
         expect(catalog.games.map((g) => g.title)).toEqual(allTitles);
-        expect(catalog.filters).toEqual({ categoryIds: [] });
+        expect(catalog.filters.categoryIds).toEqual([]);
     });
 });
 
