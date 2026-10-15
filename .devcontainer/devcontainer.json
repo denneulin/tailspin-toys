@@ -10,8 +10,7 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"GitHub.copilot",
-				"GitHub.copilot-chat",
+				"anthropic.claude-code",
 				"astro-build.astro-vscode",
 				"dbaeumer.vscode-eslint"
 			]

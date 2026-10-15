@@ -47,7 +47,7 @@
 - [ ] My code follows the project's coding standards
 - [ ] I have used explicit TypeScript types for function parameters and return values
 - [ ] I have built the UI with Astro components and Tailwind CSS utility classes (dark theme)
-- [ ] I have updated documentation (README, instruction files) if needed
+- [ ] I have updated documentation (README, CLAUDE.md, `.claude/rules/`) if needed
 - [ ] My changes are focused on a single concern
 - [ ] I have written clear commit messages explaining what and why
 

@@ -1,6 +1,6 @@
 # Update our repository coding standards
 
-Clear, documented coding standards keep the codebase consistent and make it easier for new contributors (and Copilot) to produce correct changes. Our current guidance on comments and documentation is thin, which leads to inconsistent commenting — some files are over-commented with restated code, others lack any explanation of intent. We want a single, well-understood convention that says what to document, where, and how, with emphasis on comments and documentation.
+Clear, documented coding standards keep the codebase consistent and make it easier for new contributors (and Claude) to produce correct changes. Our current guidance on comments and documentation is thin, which leads to inconsistent commenting — some files are over-commented with restated code, others lack any explanation of intent. We want a single, well-understood convention that says what to document, where, and how, with emphasis on comments and documentation.
 
 ## What we want
 
@@ -11,9 +11,9 @@ Clear, documented coding standards keep the codebase consistent and make it easi
 
 ## Acceptance criteria
 
-- [ ] `.github/instructions` files document a clear comment philosophy: comment *why* (intent/decisions), not *what*, and avoid restating code
+- [ ] `CLAUDE.md` or a rule in `.claude/rules/` documents a clear comment philosophy: comment *why* (intent/decisions), not *what*, and avoid restating code
 - [ ] TSDoc/JSDoc expectations are documented for exported functions in `db/` and `src/lib/`, including describing parameters and return values
 - [ ] Documentation expectations for `.astro` component `Props` interfaces are documented
 - [ ] TypeScript formatting rules are documented and, where possible, enforced through ESLint
 - [ ] The README links to or summarizes the updated coding standards
-- [ ] Linting passes with any newly added rules (run through the `quality-checks` skill / `npm run lint`)
+- [ ] Linting passes with any newly added rules (`npm run lint`)
