@@ -20,5 +20,6 @@ Ce ticket est livré en parallèle du ticket 02, dans un autre worktree. Il ne m
 - [ ] Le `data-testid` `category-option` est posé sur chaque case à cocher.
 - [ ] Les cases ont un focus visible. On vérifie à la main, au clavier, sur `npm run dev`, qu'on peut cocher plusieurs cases, appliquer, et que « Clear filters » les décoche toutes.
 - [ ] Le fichier de test de la famille Catégorie prouve, à travers `getCatalog` : le OU entre deux Catégories ou plus, le tri par titre sur le résultat combiné, `total`, les Filtres retenus, la fusion des doublons, le mélange de valeurs valides et invalides, et l'identifiant inconnu mêlé à un identifiant connu. Les tests du ticket 01 qui supposaient « seule la première valeur compte » sont remplacés.
+- [ ] Comme ceux du ticket 01, ces tests vérifient `filters.categoryIds` sans comparer l'objet des Filtres en entier, que le ticket 02 complète en parallèle.
 - [ ] Aucun fichier en dehors de la famille Catégorie n'est modifié.
 - [ ] `npm run test:unit`, `npm run lint` et `npm run typecheck` passent.

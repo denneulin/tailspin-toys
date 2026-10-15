@@ -28,4 +28,5 @@ Ce ticket pose tout ce qui est partagé par les Filtres : la page d'accueil rend
 - [ ] Les `data-testid` sont posés : `catalog-filters`, `category-filter`, `category-option`, `apply-filters`, `clear-filters`, `results-count` et `no-matching-games`. `games-grid` et `game-card` ne changent pas.
 - [ ] Tous les contrôles ont un focus visible, dans le style du bouton du menu de l'en-tête. On vérifie à la main, au clavier, sur `npm run dev`, qu'on peut choisir une Catégorie, appliquer et effacer.
 - [ ] Le fichier de test de la famille Catégorie prouve, à travers `getCatalog`, sur une base en mémoire : le Catalogue entier sans paramètre, le filtrage par une Catégorie, le tri par titre, `total`, les Filtres retenus et chaque cas de valeur invalide. Il prouve aussi que `getAllCategories` rend une liste complète et triée.
+- [ ] Ces tests vérifient les Catégories retenues (`filters.categoryIds`), sans comparer l'objet des Filtres en entier : le ticket 02 y ajoute l'Éditeur sans toucher aux fichiers de la famille Catégorie.
 - [ ] `npm run test:unit`, `npm run lint` et `npm run typecheck` passent.
