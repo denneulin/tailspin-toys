@@ -1,7 +1,16 @@
-import { eq, asc } from 'drizzle-orm';
+import { eq, asc, and, count } from 'drizzle-orm';
 import type { Database } from './db';
 import { games, categories, publishers } from '../../db/schema';
 import type { Game } from '../types/game';
+import { readCatalogFilters, type CatalogFilters } from './catalog-filters';
+import { categoryCondition } from './category-filter';
+
+/** What the home page shows: the games kept by the filters, the catalog size and the filters kept. */
+export interface Catalog {
+    games: Game[];
+    total: number;
+    filters: CatalogFilters;
+}
 
 const gameSelection = {
     id: games.id,
@@ -66,4 +75,21 @@ export async function getAllGameIds(db: Database): Promise<number[]> {
 export async function getGameById(db: Database, id: number): Promise<Game | null> {
     const row = await baseGamesQuery(db).where(eq(games.id, id)).get();
     return row ? mapGame(row) : null;
+}
+
+/** The games matching every filter family, ordered by title. */
+export async function getCatalogGames(db: Database, filters: CatalogFilters): Promise<Game[]> {
+    const rows = await baseGamesQuery(db)
+        .where(and(
+            categoryCondition(filters.categoryIds),
+        ))
+        .orderBy(asc(games.title));
+    return rows.map(mapGame);
+}
+
+/** The catalog filtered by the raw URL parameters; invalid values are dropped, never an error. */
+export async function getCatalog(db: Database, searchParams: URLSearchParams): Promise<Catalog> {
+    const filters = readCatalogFilters(searchParams);
+    const [{ total }] = await db.select({ total: count() }).from(games);
+    return { games: await getCatalogGames(db, filters), total, filters };
 }

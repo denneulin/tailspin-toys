@@ -1,0 +1,39 @@
+---
+import CategoryFilter from './CategoryFilter.astro';
+import type { CatalogFilters } from '../lib/catalog-filters';
+
+interface Props {
+    filters: CatalogFilters;
+}
+
+const { filters } = Astro.props;
+
+const focusClasses =
+    'focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-800';
+---
+
+<form
+    method="get"
+    action="/"
+    data-testid="catalog-filters"
+    class="mb-4 p-4 bg-slate-800/50 rounded-xl border border-slate-700 flex flex-col gap-4"
+>
+    <CategoryFilter filters={filters} />
+
+    <div class="flex flex-wrap items-center gap-4">
+        <button
+            type="submit"
+            data-testid="apply-filters"
+            class:list={['px-4 py-2 text-sm rounded-lg font-medium bg-blue-600 hover:bg-blue-700 text-white', focusClasses]}
+        >
+            Apply filters
+        </button>
+        <a
+            href="/"
+            data-testid="clear-filters"
+            class:list={['text-sm rounded text-slate-300 hover:text-white underline', focusClasses]}
+        >
+            Clear filters
+        </a>
+    </div>
+</form>

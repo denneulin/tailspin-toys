@@ -1,0 +1,45 @@
+---
+import { getDatabase } from '../lib/db';
+import { getAllCategories } from '../lib/category-filter';
+import type { CatalogFilters } from '../lib/catalog-filters';
+
+interface Props {
+    filters: CatalogFilters;
+}
+
+const { filters } = Astro.props;
+const options = await getAllCategories(getDatabase());
+
+const radioClasses =
+    'h-4 w-4 accent-blue-500 rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-slate-800';
+---
+
+<fieldset data-testid="category-filter" class="min-w-0">
+    <legend class="text-sm font-medium text-slate-200 mb-2">Category</legend>
+    <div class="flex flex-wrap gap-x-6 gap-y-2">
+        <label class="inline-flex items-center gap-2 text-slate-300">
+            <input
+                type="radio"
+                name="category"
+                value=""
+                checked={filters.categoryIds.length === 0}
+                class={radioClasses}
+                data-testid="category-option"
+            />
+            All categories
+        </label>
+        {options.map((category) => (
+            <label class="inline-flex items-center gap-2 text-slate-300">
+                <input
+                    type="radio"
+                    name="category"
+                    value={category.id}
+                    checked={filters.categoryIds.includes(category.id)}
+                    class={radioClasses}
+                    data-testid="category-option"
+                />
+                {category.name}
+            </label>
+        ))}
+    </div>
+</fieldset>
